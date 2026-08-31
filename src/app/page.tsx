@@ -505,6 +505,14 @@ export default function Home() {
             setMode('wizard');
             setCurrentStepIndex(0);
           }}
+          onJumpToSection={(secId) => {
+            triggerHaptic();
+            const firstStepIdx = steps.findIndex(s => s.id !== 'open_mic' && s.sectionId === secId);
+            if (firstStepIdx !== -1) {
+              setMode('wizard');
+              setCurrentStepIndex(firstStepIdx);
+            }
+          }}
         />
       )}
 
@@ -806,6 +814,17 @@ export default function Home() {
             sectionStats={sectionStats}
             biologicalSex={answers.biological_sex}
             lang={lang}
+            steps={steps}
+            answers={answers}
+            onJumpToStep={(stepId) => {
+              triggerHaptic();
+              const idx = steps.findIndex(s => s.id === stepId);
+              if (idx !== -1) {
+                setMode('wizard');
+                setCurrentStepIndex(idx);
+              }
+            }}
+            onReset={handleReset}
           />
         )}
       </main>

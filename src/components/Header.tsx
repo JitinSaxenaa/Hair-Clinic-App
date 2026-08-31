@@ -27,6 +27,7 @@ interface HeaderProps {
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
   onHome?: () => void;
+  onJumpToSection?: (sectionId: string) => void;
 }
 
 export default function Header({
@@ -39,7 +40,8 @@ export default function Header({
   lang,
   theme,
   setTheme,
-  onHome
+  onHome,
+  onJumpToSection
 }: HeaderProps) {
   const isDark = theme === 'dark';
   const SECTIONS = [
@@ -49,6 +51,13 @@ export default function Header({
     { id: 'D', label: lang === 'hi' ? 'घ: उपचार' : 'D: Care' },
     { id: 'E', label: lang === 'hi' ? 'ङ: सहमति' : 'E: Consent' }
   ];
+
+  const handleSectionClick = (secId: string) => {
+    triggerHaptic();
+    if (onJumpToSection) {
+      onJumpToSection(secId);
+    }
+  };
 
   return (
     <header className={`w-full py-3.5 px-4 md:px-8 flex flex-col gap-3.5 sticky top-0 z-40 transition-all duration-200 relative overflow-hidden backdrop-blur-md ${
@@ -155,7 +164,7 @@ export default function Header({
         </div>
       </div>
 
-      {/* Progress Dots/Segments */}
+      {/* Progress Dots/Segments with subtle light color shades & clickable jump */}
       <div className="grid grid-cols-5 gap-2 w-full max-w-5xl mx-auto">
         {SECTIONS.map((sec) => {
           const total = sectionStats.totalBySec[sec.id] || 0;
@@ -165,19 +174,29 @@ export default function Header({
           const isComplete = total > 0 && filled === total;
 
           return (
-            <div 
-              key={sec.id} 
-              className={`flex flex-col gap-1.5 p-1.5 md:p-2 rounded-xl border transition-all ${
+            <button
+              key={sec.id}
+              type="button"
+              onClick={() => handleSectionClick(sec.id)}
+              className={`flex flex-col gap-1.5 p-2 rounded-2xl border transition-all text-left cursor-pointer active:scale-98 group ${
                 isCurrent
-                  ? (isDark ? 'bg-sky-950/30 border-sky-600/80 shadow-xs' : 'bg-emerald-50/90 border-emerald-300 shadow-xs')
+                  ? (isDark 
+                      ? 'bg-sky-950/40 border-sky-500/80 shadow-md ring-2 ring-sky-400/20' 
+                      : 'bg-emerald-50/90 border-2 border-emerald-400 shadow-xs ring-2 ring-emerald-200/50')
                   : isComplete
-                  ? (isDark ? 'bg-slate-800/60 border-slate-700' : 'bg-teal-50/40 border-teal-200')
-                  : (isDark ? 'bg-slate-900/40 border-slate-800/70' : 'bg-white/70 border-slate-200/80')
+                  ? (isDark 
+                      ? 'bg-slate-800/80 border-slate-700 hover:border-sky-700' 
+                      : 'bg-teal-50/60 border border-teal-200 hover:border-teal-300 hover:bg-teal-50')
+                  : (isDark 
+                      ? 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700' 
+                      : 'bg-slate-50/80 border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40')
               }`}
+              aria-label={`Jump to Section ${sec.label}`}
+              title={`Jump to Section ${sec.label}`}
             >
               {/* Progress bar track */}
-              <div className={`h-1.5 md:h-2 rounded-full overflow-hidden relative shadow-inner ${
-                isDark ? 'bg-slate-800' : 'bg-slate-200'
+              <div className={`h-1.5 md:h-2 rounded-full overflow-hidden relative shadow-inner w-full ${
+                isDark ? 'bg-slate-800' : 'bg-slate-200/80'
               }`}>
                 <div
                   className={`h-full absolute left-0 top-0 transition-all duration-300 rounded-full ${
@@ -189,17 +208,17 @@ export default function Header({
                 />
               </div>
               <span 
-                className={`text-[9px] md:text-[10px] font-bold text-center truncate ${
+                className={`text-[9px] md:text-[10px] font-bold text-center truncate w-full transition-colors ${
                   isCurrent 
-                    ? (isDark ? 'text-sky-300' : 'text-emerald-950') 
+                    ? (isDark ? 'text-sky-300' : 'text-emerald-950 font-extrabold') 
                     : isComplete
-                    ? (isDark ? 'text-sky-400/80' : 'text-teal-800')
-                    : (isDark ? 'text-slate-500' : 'text-slate-500')
+                    ? (isDark ? 'text-sky-400/80' : 'text-teal-900 font-bold')
+                    : (isDark ? 'text-slate-400 group-hover:text-slate-200' : 'text-slate-600 group-hover:text-emerald-800')
                 }`}
               >
                 {sec.label}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>
