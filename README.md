@@ -8,6 +8,10 @@
 
 A modern, accessible, bilingual (English & Hindi/Hinglish), voice-enabled clinical intake application built for the **Hair Vitals Hair & Scalp Clinic**. It transforms a tedious 19-question paper intake questionnaire into an intelligent, conversational, self-filling digital wizard optimized for patients on mobile and desktop.
 
+## 🔗 Quick Links
+
+- **🚀 Live Application (Vercel):** [https://takehome-pied.vercel.app](https://takehome-pied.vercel.app)
+
 ---
 
 ## ⚡ Executive Evaluation Summary
@@ -79,13 +83,6 @@ npx tsx scripts/test-personas.ts
    - Integrate localized Indian regional accents and dialects (Hindi, Marathi, Tamil, Bengali) for warmer, natural-sounding audio guidance.
 5. **🏥 Direct EHR / EMR Export:**
    - Export clinical reports into standard **FHIR / HL7 JSON** formats ready to import into hospital electronic medical records.
-
----
-
-## 🔗 Quick Links
-
-- **🚀 Live Application (Vercel):** [https://takehome-pied.vercel.app](https://takehome-pied.vercel.app)
-- **📦 GitHub Repository:** [https://github.com/JitinSaxenaa/Hair-Clinic-App](https://github.com/JitinSaxenaa/Hair-Clinic-App)
 
 ---
 
