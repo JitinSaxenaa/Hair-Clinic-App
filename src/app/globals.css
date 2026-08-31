@@ -1,8 +1,15 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #edf2f7; /* serene cool slate blue-tint */
+  --foreground: #0f172a; /* deep slate charcoal */
+}
+
+.dark {
+  --background: #070b14; /* deep midnight navy */
+  --foreground: #f8fafc; /* crisp cool off-white */
 }
 
 @theme inline {
@@ -12,15 +19,40 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Slide in animation for question steps */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pulsing alert border for auto-filled fields */
+@keyframes pulseBorder {
+  0%, 100% {
+    border-color: rgba(217, 119, 6, 0.3);
+    box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.05);
+  }
+  50% {
+    border-color: rgba(217, 119, 6, 0.7);
+    box-shadow: 0 0 0 6px rgba(217, 119, 6, 0.2);
+  }
+}
+
+.animate-pulse-border {
+  animation: pulseBorder 2s infinite ease-in-out;
 }
