@@ -1,6 +1,6 @@
 # 🌿 Hair Vitals — Intelligent Hair & Scalp Clinical Intake
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-emerald?style=for-the-badge&logo=vercel)](https://hair-clinic-app.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-emerald?style=for-the-badge&logo=vercel)](https://takehome-pied.vercel.app)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/JitinSaxenaa/Hair-Clinic-App)
 [![Next.js](https://img.shields.io/badge/Next.js-16_(Turbopack)-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
@@ -12,7 +12,7 @@ A modern, accessible, bilingual (English & Hindi/Hinglish), voice-enabled single
 
 ## 🔗 Quick Links
 
-- **🚀 Live Application (Vercel):** [https://hair-clinic-app.vercel.app/](https://hair-clinic-app.vercel.app/)
+- **🚀 Live Application (Vercel):** [https://takehome-pied.vercel.app](https://takehome-pied.vercel.app)
 - **📦 GitHub Repository:** [https://github.com/JitinSaxenaa/Hair-Clinic-App](https://github.com/JitinSaxenaa/Hair-Clinic-App)
 
 ---
