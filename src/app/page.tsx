@@ -9,6 +9,7 @@ import ReviewScreen from '../components/ReviewScreen';
 import ResultsScreen from '../components/ResultsScreen';
 import VoiceTextInput from '../components/VoiceTextInput';
 import { useFormWizard } from '../hooks/useFormWizard';
+import { useSpeechReader } from '../hooks/useSpeechReader';
 import { translations } from '../config/translations';
 
 const triggerHaptic = () => {
@@ -45,6 +46,7 @@ export default function Home() {
     setLang
   } = useFormWizard();
 
+  const { speak, cancelSpeech } = useSpeechReader();
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const [openMicText, setOpenMicText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -107,48 +109,33 @@ export default function Home() {
 
   // 1. Text-To-Speech (TTS) reading assistant
   useEffect(() => {
-    if (ttsEnabled && activeStep && typeof window !== 'undefined' && window.speechSynthesis) {
-      try {
-        window.speechSynthesis.cancel();
-        
-        const qTrans = t.questions[activeStep.id];
-        
-        let speakText = qTrans?.title || activeStep.title;
-        if (qTrans?.subtitle || activeStep.subtitle) {
-          speakText += '. ' + (qTrans?.subtitle || activeStep.subtitle);
-        }
-        if (activeStep.type === 'single' || activeStep.type === 'yesno') {
-          speakText += lang === 'hi' ? '. विकल्प हैं: ' : '. Options are: ';
-          if (activeStep.type === 'yesno') {
-            speakText += lang === 'hi' ? 'हाँ या नहीं।' : 'Yes or No.';
-          } else if (activeStep.options) {
-            const translatedOpts = activeStep.options.map(opt => qTrans?.options?.[opt] || opt);
-            speakText += translatedOpts.join(', ') + '.';
-          }
-        }
-
-        const utterance = new SpeechSynthesisUtterance(speakText);
-        utterance.rate = 0.95; // Slightly slower for readability
-        
-        if (lang === 'hi') {
-          utterance.lang = 'hi-IN';
-        } else {
-          utterance.lang = 'en-US';
-        }
-        
-        window.speechSynthesis.speak(utterance);
-      } catch (e) {
-        console.error('Speech synthesis error:', e);
+    if (ttsEnabled && activeStep) {
+      const qTrans = t.questions[activeStep.id];
+      let speakText = qTrans?.title || activeStep.title;
+      if (qTrans?.subtitle || activeStep.subtitle) {
+        speakText += '. ' + (qTrans?.subtitle || activeStep.subtitle);
       }
+      if (activeStep.type === 'single' || activeStep.type === 'yesno') {
+        speakText += lang === 'hi' ? '. विकल्प हैं: ' : '. Options are: ';
+        if (activeStep.type === 'yesno') {
+          speakText += lang === 'hi' ? 'हाँ या नहीं।' : 'Yes or No.';
+        } else if (activeStep.options) {
+          const translatedOpts = activeStep.options.map(opt => qTrans?.options?.[opt] || opt);
+          speakText += translatedOpts.join(', ') + '.';
+        }
+      }
+
+      // Romanized fallback for systems without Hindi TTS voice installed
+      const romanFallback = lang === 'hi' ? `${activeStep.title}. ${activeStep.subtitle || ''}` : undefined;
+      speak(speakText, lang, romanFallback);
+    } else {
+      cancelSpeech();
     }
 
-    // Cleanup to cancel speech immediately when toggled off or step changes
     return () => {
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
+      cancelSpeech();
     };
-  }, [activeStep, ttsEnabled, lang, t]);
+  }, [activeStep, ttsEnabled, lang, t, speak, cancelSpeech]);
 
   // 2. Open Mic analysis caller
   const handleAnalyzeOpenMic = async (textToAnalyze?: string) => {
@@ -312,19 +299,12 @@ export default function Home() {
   }, [mode, steps, answers, isLoaded, hasComputedQueue]);
 
   useEffect(() => {
-    if (mode === 'assistant' && activeAssistantStep && ttsEnabled && typeof window !== 'undefined' && window.speechSynthesis) {
-      try {
-        window.speechSynthesis.cancel();
-        const qTrans = t.questions[activeAssistantStep.id];
-        const speakText = qTrans?.title || activeAssistantStep.title;
-        const utterance = new SpeechSynthesisUtterance(speakText);
-        utterance.lang = lang === 'hi' ? 'hi-IN' : 'en-US';
-        window.speechSynthesis.speak(utterance);
-      } catch (e) {
-        console.error(e);
-      }
+    if (mode === 'assistant' && activeAssistantStep && ttsEnabled) {
+      const qTrans = t.questions[activeAssistantStep.id];
+      const speakText = qTrans?.title || activeAssistantStep.title;
+      speak(speakText, lang, activeAssistantStep.title);
     }
-  }, [mode, assistantQueueIdx, ttsEnabled, lang, activeAssistantStep, t]);
+  }, [mode, assistantQueueIdx, ttsEnabled, lang, activeAssistantStep, t, speak]);
 
   useEffect(() => {
     if (mode === 'assistant' && hasComputedQueue && (assistantQueue.length === 0 || assistantQueueIdx >= assistantQueue.length)) {
