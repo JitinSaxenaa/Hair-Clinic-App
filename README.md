@@ -8,7 +8,7 @@
 
 A modern, accessible, bilingual (English & Hindi/Hinglish), voice-enabled clinical intake application built for the **Hair Vitals Hair & Scalp Clinic**. It transforms a tedious 19-question paper intake questionnaire into an intelligent, conversational, self-filling digital wizard optimized for patients on mobile and desktop.
 
-## 🔗 Quick Links
+## 🔗 Quick Links - 
 
 - **🚀 Live Application (Vercel):** [https://takehome-pied.vercel.app](https://takehome-pied.vercel.app)
 
